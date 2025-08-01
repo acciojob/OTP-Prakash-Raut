@@ -1,30 +1,37 @@
-//your JS code here. If required.
 const inputs = document.querySelectorAll('.code');
 
 document.addEventListener('DOMContentLoaded', () => {
-  inputs.forEach((input, index) => {
-    input.addEventListener('input', () => handleInput(input, index));
-    input.addEventListener('keydown', (e) => handleBackspace(e, index));
+  inputs.forEach((input) => {
+    input.addEventListener('input', () => handleInput(input));
+    input.addEventListener('keydown', (e) => handleBackspace(e, input));
   });
   focusFirstInput();
 });
 
-function handleInput(input, index) {
+function getInputIndex(input) {
+  return parseInt(input.id.split('-')[1]);
+}
+
+function handleInput(input) {
+  const index = getInputIndex(input);
   if (input.value.length > 1) {
     input.value = input.value.charAt(0);
   }
-  if (input.value && index < inputs.length - 1) {
-    inputs[index + 1].focus(); // Move to next field
+  const next = document.querySelector(`#code-${index + 1}`);
+  if (input.value && next) {
+    next.focus();
   }
 }
 
-function handleBackspace(e, index) {
-  const input = inputs[index];
-  if (e.key === 'Backspace' && !input.value && index > 0) {
-    inputs[index - 1].focus(); // Move to previous field
+function handleBackspace(e, input) {
+  const index = getInputIndex(input);
+  if (e.key === 'Backspace' && !input.value) {
+    const prev = document.querySelector(`#code-${index - 1}`);
+    if (prev) prev.focus();
   }
 }
 
 function focusFirstInput() {
-  inputs[0].focus();
+  const first = document.querySelector('#code-1');
+  if (first) first.focus();
 }
